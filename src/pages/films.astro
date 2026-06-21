@@ -1,34 +1,43 @@
 ---
 import Base from '../layouts/Base.astro';
 
-// HOW TO ADD A FILM:
-//  - YouTube/Vimeo: set `embed` to the embed URL (e.g. https://www.youtube.com/embed/VIDEO_ID).
-//  - Instagram reel: set `embed` to https://www.instagram.com/reel/REEL_ID/embed .
-//  - Leave `embed: null` to show a placeholder frame until you drop one in.
-// Don't commit raw .mp4 files to the repo — host on YouTube/Vimeo/Cloudflare Stream and embed.
+// Self-hosted, web-optimized 1080p clips in /public/films/.
+// Vertical sources are normalized to 16:9 via blurred-fill so the gallery is uniform.
 const films = [
-  { title: 'Trip edit — placeholder', kind: 'reel',  embed: null },
-  { title: 'Trip edit — placeholder', kind: 'reel',  embed: null },
-  { title: '3D capture — placeholder', kind: 'splat', embed: null },
+  { src: 'jellyfish-01', title: 'Jellyfish',    note: 'aquarium · with detection overlays' },
+  { src: 'jellyfish-02', title: 'Jellyfish · II', note: 'aquarium' },
+  { src: 'beach',        title: 'Shoreline',    note: 'unreleased' },
+  { src: 'greece',       title: 'Greece',       note: 'earth zoom out' },
 ];
 ---
-<Base title="Films" description="Trip edits and gaussian-splat experiments by Viren Govin.">
+<Base title="Films" description="Unreleased clips by Viren Govin — jellyfish, shorelines, and other footage that never made it to the feed.">
   <div class="page container">
     <h1 class="page-title">Films</h1>
     <p class="lede">
-      Trip edits, and the gaussian-splat / point-cloud experiments they turn
-      into. Hosted off-site and embedded — full pieces live on
-      <a href="#" class="accent">Instagram</a>.
-      <!-- TODO(viren): point the Instagram link at your profile. -->
+      Clips that never made it to the feed — jellyfish, shorelines, and other
+      footage I shot and sat on. Tap any to play with sound.
     </p>
 
     <div class="grid">
       {films.map((f) => (
-        <figure class="frame">
-          {f.embed
-            ? <iframe src={f.embed} title={f.title} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
-            : <div class="placeholder"><span class="play mono">▶ {f.kind}</span><span class="ph mono">drop embed</span></div>}
-          <figcaption class="mono">{f.title}</figcaption>
+        <figure class="card" data-film>
+          <video
+            class="vid"
+            src={`/films/${f.src}.mp4`}
+            poster={`/films/${f.src}.jpg`}
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label={f.title}
+          ></video>
+          <button class="overlay" type="button" aria-label={`Play ${f.title} with sound`}>
+            <span class="play mono">▶ play</span>
+          </button>
+          <figcaption>
+            <span class="t">{f.title}</span>
+            <span class="n mono">{f.note}</span>
+          </figcaption>
         </figure>
       ))}
     </div>
@@ -36,34 +45,94 @@ const films = [
 </Base>
 
 <style>
-  .lede a { border-bottom: 1px solid rgba(87,226,229,0.3); }
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr));
+    gap: 18px;
   }
-  .frame { margin: 0; }
-  .frame iframe,
-  .placeholder {
+  .card { margin: 0; position: relative; }
+  .vid,
+  .overlay {
     width: 100%;
-    aspect-ratio: 9 / 16;
-    border: 1px solid var(--line);
+    aspect-ratio: 16 / 9;
     border-radius: 4px;
-    background: var(--ground-2);
     display: block;
   }
-  .placeholder {
-    position: relative;
+  .vid {
+    border: 1px solid var(--line);
+    background: var(--ground-2);
+    object-fit: cover;
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: linear-gradient(to top, rgba(10,14,20,0.5), transparent 45%);
+    cursor: pointer;
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
     padding: 16px;
-    background:
-      radial-gradient(120% 80% at 70% 20%, rgba(160,107,255,0.12), transparent 60%),
-      radial-gradient(120% 80% at 30% 90%, rgba(87,226,229,0.12), transparent 60%),
-      var(--ground-2);
+    transition: background 0.25s;
   }
-  .play { color: var(--accent); }
-  .ph { color: var(--muted); }
-  figcaption { margin-top: 10px; color: var(--muted); }
+  .card:hover .overlay { background: linear-gradient(to top, rgba(10,14,20,0.35), rgba(87,226,229,0.06)); }
+  .play {
+    color: var(--accent);
+    font-size: 12px;
+    background: rgba(10,14,20,0.6);
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+  }
+  .card.playing .overlay { background: none; }
+  .card.playing .play { opacity: 0; }
+
+  figcaption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .t { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+  .n { color: var(--muted); }
 </style>
+
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('[data-film]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  cards.forEach((card) => {
+    const vid = card.querySelector('video') as HTMLVideoElement;
+    const btn = card.querySelector('.overlay') as HTMLButtonElement;
+
+    // Click → unmute + fullscreen + play.
+    btn.addEventListener('click', () => {
+      vid.muted = false;
+      vid.play();
+      card.classList.add('playing');
+      if (vid.requestFullscreen) vid.requestFullscreen().catch(() => {});
+    });
+    // Re-mute and reset chrome when leaving fullscreen.
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        vid.muted = true;
+        card.classList.remove('playing');
+      }
+    });
+  });
+
+  // Autoplay (muted, looping) only while in view — saves CPU/bandwidth. Skipped under reduced-motion.
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const vid = e.target as HTMLVideoElement;
+          if (e.isIntersecting) vid.play().catch(() => {});
+          else vid.pause();
+        });
+      },
+      { threshold: 0.4 }
+    );
+    cards.forEach((c) => io.observe(c.querySelector('video') as HTMLVideoElement));
+  }
+</script>
