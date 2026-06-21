@@ -1,0 +1,157 @@
+---
+import Base from '../layouts/Base.astro';
+
+const now = {
+  org: 'Chakra Labs',
+  role: 'Member of Technical Staff',
+  when: 'Nov 2025 — present',
+  notes: [
+    'RL environments and CUA (computer-use agent) training infrastructure.',
+    'Research operations and partnerships — building the environments that frontier labs train and evaluate agents on.',
+  ],
+};
+
+const previously = [
+  { org: 'Alchemy',  role: 'Research (contract)', when: '2025—26', note: 'Crypto market research — stablecoins, neobanks, and agentic dApps. Aggregated 1M+ RPC/API requests into dApp-level user-behavior insights.' },
+  { org: 'Coinbase', role: 'Research (contract)', when: '2025',    note: 'Research on Base. Automated participant ops (CDP SDK + Slack API, ~120 hrs/yr saved) and shipped product ideas that lifted builder retention ~20%.' },
+  { org: 'Citadel',  role: 'Analyst (intern)',    when: '2024',    note: 'Post-trade operations, fixed income. Automated processes with SQL / gRPC / BigQuery (+85% efficiency) and surfaced $150K in potential fee savings.' },
+];
+
+const earlier = 'Earlier: Data Science @ WebstaurantStore (sentiment models over 60K+ interactions) · DAO Research @ DAOHQ (a $150K accelerator allocation model).';
+
+const projects = [
+  {
+    name: 'ALCI',
+    tag: '3D generative NFTs',
+    prize: '$10K grant · OpenTensor / DormBuilders',
+    href: 'https://alci000.xyz',
+    desc: 'Procedurally generated 3D art collection on Bittensor EVM. Piped SN17 .ply outputs through S3 + Lambda point-manipulation, then built the full-stack viewer against the BittensorEVM RPC. The point-cloud / gaussian-splat look this whole site borrows.',
+  },
+  {
+    name: 'Unagi',
+    tag: 'verifiable camera network',
+    prize: '$16K · Bittensor Hackathon / EigenGames / EthDenver',
+    href: null,
+    desc: 'An autonomously verifiable camera network — EigenLayer + Othentic for verification, Story for camera IP, and agentic on-chain execution via Coinbase AgentKit.',
+  },
+  {
+    name: 'Data Derricks',
+    tag: 'fracking-loss prediction',
+    prize: '1st place · Energy AI 2024 · $5K',
+    href: null,
+    desc: 'An optimized XGBoost regressor predicting fracking-well fluid loss to ~8 gal/min MSE, with random-forest imputation and mutual-info feature selection across 40+ well features.',
+  },
+  {
+    name: 'StarkTree',
+    tag: 'zk identity',
+    prize: '$750 · Starknet HackerHouse',
+    href: null,
+    desc: 'Verifiable on-chain identities with zk-STARKs, built on Rust-based Cairo smart contracts.',
+  },
+  {
+    name: 'Nanomanufacturing + Holography',
+    tag: 'research · McCombs',
+    prize: '2025',
+    href: null,
+    desc: 'Deep learning applied to holography and nanomanufacturing — the thread that still pulls me toward optics and holograms.',
+  },
+];
+---
+<Base title="Work" description="Viren Govin — RL environments at Chakra Labs, prior research roles, and the projects and hackathon wins behind them.">
+  <div class="page container">
+    <h1 class="page-title">Work</h1>
+    <p class="lede">
+      The short version: crypto and DeFi research → agents → RL environments
+      and computer-use infrastructure. Below, the roles — and the things I
+      actually shipped.
+    </p>
+
+    <section>
+      <div class="section-label"><span class="tag mono">// now</span><h2>current</h2></div>
+      <div class="now">
+        <div class="now-head">
+          <span class="org">{now.org}</span>
+          <span class="when mono">{now.when}</span>
+        </div>
+        <p class="role">{now.role}</p>
+        <ul>{now.notes.map((n) => <li>{n}</li>)}</ul>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label"><span class="tag mono">// before</span><h2>previously</h2></div>
+      {previously.map((p) => (
+        <div class="prev">
+          <div class="prev-meta">
+            <span class="org">{p.org}</span>
+            <span class="prev-role mono">{p.role}</span>
+            <span class="when mono">{p.when}</span>
+          </div>
+          <p class="prev-note">{p.note}</p>
+        </div>
+      ))}
+      <p class="earlier dim">{earlier}</p>
+    </section>
+
+    <section>
+      <div class="section-label"><span class="tag mono">// build log</span><h2>projects &amp; wins</h2></div>
+      <div class="grid">
+        {projects.map((pr) => {
+          const Tag = pr.href ? 'a' : 'div';
+          return (
+            <Tag class="card" href={pr.href} target={pr.href ? '_blank' : null} rel="noopener">
+              <div class="card-top">
+                <span class="card-name">{pr.name}</span>
+                <span class="card-tag mono">{pr.tag}</span>
+              </div>
+              <p class="card-desc">{pr.desc}</p>
+              <p class="prize mono">{pr.prize}{pr.href ? ' ↗' : ''}</p>
+            </Tag>
+          );
+        })}
+      </div>
+      <p class="footnote dim">Award winner at 12+ hackathons and case competitions · VP, Texas Blockchain · President, MIS Association.</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  section { margin-bottom: 70px; }
+
+  .org { font-size: clamp(22px, 3vw, 30px); font-weight: 700; letter-spacing: -0.02em; }
+  .when { color: var(--muted); }
+
+  .now-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .now .role { color: var(--accent); margin: 4px 0 14px; font-size: 15px; letter-spacing: 0.01em; }
+  .now ul { margin: 0; padding-left: 18px; color: #C3CBD6; max-width: 720px; }
+  .now li { margin-bottom: 8px; }
+
+  .prev { padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .prev-meta { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .prev .org { font-size: clamp(19px, 2.4vw, 24px); }
+  .prev-role { color: var(--accent); }
+  .prev-note { color: #C3CBD6; margin: 8px 0 0; max-width: 760px; }
+  .earlier { margin-top: 26px; font-size: 14px; max-width: 760px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--ground-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  a.card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .card-name { font-size: 21px; font-weight: 700; letter-spacing: -0.02em; }
+  .card-tag { color: var(--muted); font-size: 10px; }
+  .card-desc { color: #C3CBD6; font-size: 14px; margin: 0 0 16px; flex: 1; }
+  .prize { color: var(--accent); font-size: 11px; margin: 0; }
+  .footnote { margin-top: 26px; font-size: 13px; }
+</style>

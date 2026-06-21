@@ -1,0 +1,133 @@
+---
+import Base from '../layouts/Base.astro';
+import PointCloud from '../components/PointCloud.astro';
+
+const directory = [
+  { idx: '01', href: '/work',  title: 'Work',  desc: 'RL environments at Chakra, a trail of research roles, and the projects + hackathon wins behind them.' },
+  { idx: '02', href: '/notes', title: 'Notes', desc: 'A running notebook — post-training, where tokens come from, semiconductors, and the occasional space/physics tangent.' },
+  { idx: '03', href: '/films', title: 'Films', desc: 'Trip edits and the gaussian-splat / point-cloud experiments they turn into. Motion is half the point.' },
+  { idx: '04', href: '/about', title: 'About', desc: 'The whole stack — AI, semis, space, holograms, anime, the gym, and how it feeds the work.' },
+];
+---
+<Base>
+  <header class="hero">
+    <PointCloud />
+    <div class="readout mono">
+      <span><span class="dot">●</span> scan_001 · point_cloud</span>
+      <span>pts 2400 · depth cyan→violet</span>
+      <span>mode live · drift 0.4°/f</span>
+    </div>
+
+    <div class="lower-third">
+      <p class="eyebrow mono">data · silicon · intelligence · film</p>
+      <h1>VIREN<span class="thin">.</span></h1>
+      <p class="tagline">
+        I build at the edges of <b>data, silicon, and intelligence</b> — RL
+        environments at <b>Chakra</b>, generative 3D, and films of the trip there.
+      </p>
+    </div>
+
+    <a class="scrollcue mono" href="#index">↓ enter the index</a>
+  </header>
+
+  <section class="index container" id="index">
+    <div class="section-label">
+      <span class="tag mono">// directory</span>
+      <h2>where to go</h2>
+    </div>
+
+    {directory.map((d) => (
+      <a class="row" href={d.href}>
+        <span class="idx mono">{d.idx}</span>
+        <span class="body">
+          <span class="title">{d.title}</span>
+          <span class="desc">{d.desc}</span>
+        </span>
+        <span class="go mono">{d.href} →</span>
+      </a>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
+    width: 100%;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 90% at 62% 38%, transparent 40%, rgba(6,9,14,0.55) 100%),
+      linear-gradient(to bottom, transparent 55%, var(--ground) 99%);
+  }
+
+  .readout {
+    position: absolute;
+    top: 92px; left: var(--pad);
+    z-index: 5; line-height: 2.1;
+  }
+  .readout span { display: block; }
+  .dot { color: var(--accent); }
+
+  .lower-third {
+    position: absolute;
+    left: var(--pad); bottom: 9vh;
+    z-index: 5; max-width: 760px;
+  }
+  .eyebrow { margin: 0 0 18px; }
+  .lower-third h1 {
+    font-weight: 800;
+    font-size: clamp(64px, 13vw, 180px);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+  }
+  .lower-third h1 .thin { font-weight: 200; color: var(--muted); }
+  .tagline {
+    margin: 26px 0 0;
+    font-size: clamp(16px, 2.1vw, 21px);
+    max-width: 540px;
+    color: #C3CBD6;
+  }
+  .tagline b { color: var(--text); font-weight: 600; }
+
+  .scrollcue {
+    position: absolute;
+    right: var(--pad); bottom: 9vh;
+    z-index: 5;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+  }
+  .scrollcue:hover { opacity: 1; color: var(--accent); }
+
+  .index { padding-top: 90px; }
+  .row {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 8px;
+    border-bottom: 1px solid var(--line);
+    transition: padding-left 0.3s ease, background 0.3s ease;
+  }
+  .row:hover {
+    padding-left: 22px;
+    background: linear-gradient(90deg, rgba(87,226,229,0.05), transparent 60%);
+  }
+  .idx { color: var(--accent); font-size: 12px; }
+  .body { display: block; }
+  .title { display: block; font-size: clamp(30px, 5vw, 56px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+  .desc { display: block; font-size: 14px; color: var(--muted); margin-top: 12px; max-width: 480px; }
+  .go { color: var(--muted); white-space: nowrap; transition: color 0.3s, transform 0.3s; }
+  .row:hover .go { color: var(--accent); transform: translateX(6px); }
+
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 38px 1fr; }
+    .go { display: none; }
+    .readout { display: none; }
+  }
+</style>

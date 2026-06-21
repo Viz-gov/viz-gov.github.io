@@ -1,0 +1,33 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const {
+  title = 'Viren Govin',
+  description = 'Viren Govin — RL environments at Chakra Labs, generative 3D, and films. Building at the edge of data, silicon, and intelligence.',
+} = Astro.props;
+const fullTitle = title === 'Viren Govin' ? title : `${title} · Viren Govin`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0A0E14" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

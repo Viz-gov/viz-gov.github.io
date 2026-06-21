@@ -1,0 +1,84 @@
+---
+// Live, depth-colored point cloud rendered to <canvas>. Runs entirely in the
+// visitor's browser (perfect for static / GitHub Pages). Respects reduced motion.
+---
+<canvas id="cloud" aria-hidden="true"></canvas>
+
+<style>
+  #cloud {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById('cloud') as HTMLCanvasElement | null;
+  if (canvas) {
+    const ctx = canvas.getContext('2d')!;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    let W = 0, H = 0;
+
+    function resize() {
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    window.addEventListener('resize', resize);
+
+    // Torus-knot point cloud with gaussian volume jitter (a "splat" feel).
+    const N = 2400, p = 2, q = 3, R = 1.0;
+    const pts: number[][] = [];
+    for (let i = 0; i < N; i++) {
+      const u = (i / N) * Math.PI * 2 * q;
+      const r = R * (0.6 + 0.18 * Math.cos((q * u) / p));
+      let x = r * Math.cos((p * u) / q);
+      let y = r * Math.sin((p * u) / q);
+      let z = r * Math.sin(u);
+      const j = 0.10;
+      x += (Math.random() + Math.random() + Math.random() - 1.5) * j;
+      y += (Math.random() + Math.random() + Math.random() - 1.5) * j;
+      z += (Math.random() + Math.random() + Math.random() - 1.5) * j;
+      pts.push([x, y, z]);
+    }
+
+    const near = [0x57, 0xe2, 0xe5]; // cyan
+    const far = [0xa0, 0x6b, 0xff];  // violet
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ang = 0.5;
+    resize();
+
+    function frame() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      const cx = W * 0.62, cy = H * 0.44;
+      const scale = Math.min(W, H) * 0.30;
+      const ca = Math.cos(ang), sa = Math.sin(ang);
+      const tilt = 0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
+
+      for (let i = 0; i < pts.length; i++) {
+        const x = pts[i][0], y = pts[i][1], z = pts[i][2];
+        const x1 = x * ca - z * sa, z1 = x * sa + z * ca;
+        const y1 = y * ct - z1 * st, z2 = y * st + z1 * ct;
+        const persp = 1 / (2.6 - z2 * 0.9);
+        const sx = cx + x1 * scale * persp * 2.6;
+        const sy = cy + y1 * scale * persp * 2.6;
+        let d = (z2 + 1.2) / 2.4; if (d < 0) d = 0; if (d > 1) d = 1;
+        const rC = (far[0] + (near[0] - far[0]) * d) | 0;
+        const gC = (far[1] + (near[1] - far[1]) * d) | 0;
+        const bC = (far[2] + (near[2] - far[2]) * d) | 0;
+        const size = 0.5 + d * 2.1;
+        const alpha = 0.12 + d * 0.55;
+        ctx.fillStyle = `rgba(${rC},${gC},${bC},${alpha})`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, size, 0, 6.2832);
+        ctx.fill();
+      }
+      ctx.globalCompositeOperation = 'source-over';
+      if (!reduce) { ang += 0.0028; requestAnimationFrame(frame); }
+    }
+    frame();
+  }
+</script>

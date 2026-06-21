@@ -1,0 +1,42 @@
+---
+// TODO(viren): swap the # placeholders for your real Instagram + GitHub URLs.
+const links = [
+  { href: 'https://x.com/GovViz',     label: 'X / @GovViz' },
+  { href: '#',                        label: 'Instagram' },
+  { href: '#',                        label: 'GitHub' },
+  { href: 'https://alci000.xyz',      label: 'alci000.xyz' },
+  { href: 'mailto:vireng@utexas.edu', label: 'Email' },
+];
+---
+<footer>
+  <div class="flinks">
+    {links.map((l) => (
+      <a href={l.href} target={l.href.startsWith('http') ? '_blank' : null} rel="noopener">{l.label}</a>
+    ))}
+  </div>
+  <div class="sig mono">built from a point cloud · NYC</div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 60px;
+    padding: 40px var(--pad) 60px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: space-between;
+    align-items: flex-end;
+    max-width: var(--maxw);
+    margin-inline: auto;
+  }
+  .flinks { display: flex; flex-wrap: wrap; gap: clamp(16px, 3vw, 28px); }
+  .flinks a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    opacity: 0.78;
+    transition: color 0.2s, opacity 0.2s;
+  }
+  .flinks a:hover { opacity: 1; color: var(--accent); }
+</style>

@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+
+// HOW TO ADD A FILM:
+//  - YouTube/Vimeo: set `embed` to the embed URL (e.g. https://www.youtube.com/embed/VIDEO_ID).
+//  - Instagram reel: set `embed` to https://www.instagram.com/reel/REEL_ID/embed .
+//  - Leave `embed: null` to show a placeholder frame until you drop one in.
+// Don't commit raw .mp4 files to the repo — host on YouTube/Vimeo/Cloudflare Stream and embed.
+const films = [
+  { title: 'Trip edit — placeholder', kind: 'reel',  embed: null },
+  { title: 'Trip edit — placeholder', kind: 'reel',  embed: null },
+  { title: '3D capture — placeholder', kind: 'splat', embed: null },
+];
+---
+<Base title="Films" description="Trip edits and gaussian-splat experiments by Viren Govin.">
+  <div class="page container">
+    <h1 class="page-title">Films</h1>
+    <p class="lede">
+      Trip edits, and the gaussian-splat / point-cloud experiments they turn
+      into. Hosted off-site and embedded — full pieces live on
+      <a href="#" class="accent">Instagram</a>.
+      <!-- TODO(viren): point the Instagram link at your profile. -->
+    </p>
+
+    <div class="grid">
+      {films.map((f) => (
+        <figure class="frame">
+          {f.embed
+            ? <iframe src={f.embed} title={f.title} loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+            : <div class="placeholder"><span class="play mono">▶ {f.kind}</span><span class="ph mono">drop embed</span></div>}
+          <figcaption class="mono">{f.title}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .lede a { border-bottom: 1px solid rgba(87,226,229,0.3); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .frame { margin: 0; }
+  .frame iframe,
+  .placeholder {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--ground-2);
+    display: block;
+  }
+  .placeholder {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 16px;
+    background:
+      radial-gradient(120% 80% at 70% 20%, rgba(160,107,255,0.12), transparent 60%),
+      radial-gradient(120% 80% at 30% 90%, rgba(87,226,229,0.12), transparent 60%),
+      var(--ground-2);
+  }
+  .play { color: var(--accent); }
+  .ph { color: var(--muted); }
+  figcaption { margin-top: 10px; color: var(--muted); }
+</style>

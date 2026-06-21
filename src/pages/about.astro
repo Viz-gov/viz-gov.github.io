@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+
+const interests = [
+  'post-training', 'RL environments', 'computer-use agents', 'semiconductors',
+  'space', 'physics', 'holography', 'gaussian splatting', 'generative 3D',
+  'filmmaking', 'anime', 'pokémon', 'looksmaxxing', 'boxing', 'crypto (recovering)',
+];
+---
+<Base title="About" description="Viren Govin — who I am, what I'm into, and how it all feeds the work.">
+  <div class="page container">
+    <h1 class="page-title">About</h1>
+
+    <div class="prose">
+      <p>
+        I'm <b>Viren</b>. I think about how intelligence actually gets built —
+        the <span class="accent">data</span> that feeds it and the
+        <span class="accent">silicon</span> that runs it — and I like being close
+        to the metal of both. Right now that means building
+        <b>RL environments and computer-use infrastructure at Chakra Labs</b>:
+        the worlds frontier labs train and evaluate agents in.
+      </p>
+      <p>
+        I got here on a winding path — DeFi and crypto research (Coinbase,
+        Alchemy), a quant summer at Citadel, a pile of hackathon wins, and a 3D
+        NFT project, <a href="https://alci000.xyz" target="_blank" rel="noopener">ALCI</a>,
+        that turned blockchain entropy into <span class="ghost">point clouds</span>.
+        That splat/point-cloud aesthetic is all over this site on purpose — it's
+        the medium I keep coming back to.
+      </p>
+      <p>
+        Off the clock I'm filming trips and cutting them into edits, training,
+        and going deep on the things that don't pay the bills yet: holograms,
+        space, the physics underneath it all — and arguing about anime. I studied
+        <b>MIS at UT Austin's McCombs</b> (3.9, with CS + computational science
+        minors), ran the MIS Association, and was VP of Texas Blockchain.
+      </p>
+      <p class="dim">
+        Best ways to reach me are in the footer. This is the running home base —
+        the <a href="/notes">notes</a> are where I think out loud, the
+        <a href="/films">films</a> are where I don't.
+      </p>
+    </div>
+
+    <div class="section-label" style="margin-top:64px;"><span class="tag mono">// the stack</span><h2>interests</h2></div>
+    <div class="tags">
+      {interests.map((t) => <span class="chip mono">{t}</span>)}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .prose { max-width: 720px; }
+  .prose p { font-size: clamp(17px, 2.1vw, 21px); color: #C9D0DA; margin: 0 0 26px; line-height: 1.6; }
+  .prose b { color: var(--text); font-weight: 600; }
+  .prose a { color: var(--accent); border-bottom: 1px solid rgba(87,226,229,0.3); }
+  .prose a:hover { border-color: var(--accent); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-size: 11px;
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    color: var(--muted);
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .chip:hover { color: var(--accent); border-color: var(--accent); }
+</style>
