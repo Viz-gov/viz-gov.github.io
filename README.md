@@ -1,4 +1,4 @@
-# virengovin.github.io
+# viz-gov.github.io
 
 Personal site + side-project hub. Dark/cinematic; the hero is a live point cloud.
 Built with [Astro](https://astro.build), deployed free to GitHub Pages.

@@ -5,6 +5,6 @@ import sitemap from '@astrojs/sitemap';
 
 // User/org page (virengovin.github.io) deploys from the domain root, so no `base` needed.
 export default defineConfig({
-  site: 'https://virengovin.github.io',
+  site: 'https://viz-gov.github.io',
   integrations: [mdx(), sitemap()],
 });
